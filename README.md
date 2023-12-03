@@ -1,5 +1,5 @@
 # Code Implemetation
-This document provides instructions for setting up and running the CIFAR-100 dataset implementation using the provided \texttt{main.py} script.
+This document provides instructions for setting up and running the CIFAR-100 dataset implementation using the provided **main.py** script.
 
 ## Requirements
 The following packages are required to run the script:
@@ -25,3 +25,6 @@ python main.py --initial-classes=0 --incremental-classes=10 --gpu=0
 
 ## Inference
 If you want to see the results, check the acc.ipynb file
+
+Note that this code is heavily based on the great codebase of [DyTox](https://github.com/arthurdouillard/dytox).
+
