@@ -24,7 +24,15 @@ python main.py --initial-classes=0 --incremental-classes=10 --gpu=0
 --gpu: GPU id to use for training. Default is 0.<br>
 
 ## Inference
-If you want to see the results, check the acc.ipynb file
+If you want to see the results, check the **acc.ipynb**.
 
+
+## 
 Note that this code is heavily based on the great codebase of [DyTox](https://github.com/arthurdouillard/dytox).
-
+```
+@inproceedings{douillard2021dytox,
+  title     = {DyTox: Transformers for Continual Learning with DYnamic TOken eXpansion},
+  author    = {Douillard, Arthur and Ram\'e, Alexandre and Couairon, Guillaume and Cord, Matthieu},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2022}
+}
