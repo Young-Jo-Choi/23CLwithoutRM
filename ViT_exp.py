@@ -12,7 +12,6 @@ from timm.models.layers import trunc_normal_
 from classifier import Classifier
 from typing import Union, List
 
-# classifier 구조를 확장
 class ViT_clf(nn.Module):
     def __init__(self, num_classes, img_size, patch_size, num_patches, in_chans, embed_dim, 
                  depth, num_heads, mlp_ratio, qkv_bias, qk_scale, drop_rate, attn_drop_rate, drop_path, norm_layer,
@@ -30,7 +29,6 @@ class ViT_clf(nn.Module):
         self.mode = 'normal'
 
         self.patch_embedding = PatchEmbed(img_size=img_size, patch_size=patch_size, in_chans=in_chans, embed_dim=embed_dim)
-        # pos_embed가 꼭 init에 들어가야하는지 생각
         self.pos_embed = nn.Parameter(torch.zeros(1, num_patches, embed_dim))
         trunc_normal_(self.pos_embed, std=.02)
         self.pos_drop = nn.Dropout(p=drop_rate)
@@ -43,7 +41,6 @@ class ViT_clf(nn.Module):
         
         blocks.append(self.SA_Blocks(ClassAttention, depth-1))
         self.blocks = nn.ModuleList(blocks)
-        # 일부 파라미터는 없어도 되는데 껴있(increment, nb_tasks)
         self.clf = nn.ModuleList([Classifier(embed_dim, nb_total_classes=None, nb_base_classes=num_classes, increment=10, nb_tasks=10)])  # nn.Linear층
 
     def set_task_token(self, task_tokens):
@@ -69,10 +66,10 @@ class ViT_clf(nn.Module):
         x = self.patch_embedding(x)
         x = self.pos_drop(x + self.pos_embed)
         if self.mode == 'normal':
-            task_tokens = self.task_tokens.expand(x.shape[0],-1,-1)   # task token의 확장 -> 확장된 task token이 모두 같은 값으로 유지되는지 체크
+            task_tokens = self.task_tokens.expand(x.shape[0],-1,-1)  
             x = torch.cat((task_tokens, x), dim=1)
         elif self.mode == 'kd':
-            teacher_task_tokens = self.teacher_task_tokens.expand(x.shape[0],-1,-1)   # task token의 확장 -> 확장된 task token이 모두 같은 값으로 유지되는지 체크
+            teacher_task_tokens = self.teacher_task_tokens.expand(x.shape[0],-1,-1) 
             x = torch.cat((teacher_task_tokens, x), dim=1)
         for block in self.blocks:
             x,_,_ = block(x)
@@ -109,7 +106,6 @@ def forward(x, y, model, teacher_model, criterion, task_tokens_list:Union[List, 
         y_pred = model.classify(x_emb)
         loss_new_task = mixup_criterion(criterion, y_pred, y_a, y_b, lam)
     else:
-        # clf1,2 나눠서
         x_emb = model.feature_extract(x)
         y_pred = model.classiy_task(x_emb, len(task_tokens_list))
         loss_new_task = criterion(y_pred, y.long())

@@ -35,7 +35,6 @@ if __name__ == '__main__':
     mix_up_first = True if arg_input.mix_up_first=='True' else False
     mix_up_increment = True if arg_input.mix_up_increment=='True' else False
 
-    # 수정
     f = open('./args/args.pkl','rb')
     args = pickle.load(f)
     f1 = open('./args/cifar_dytox.yaml', 'r', encoding='utf-8')
@@ -60,8 +59,7 @@ if __name__ == '__main__':
 
     filterwarnings('ignore')
     set_random_seed(seed)
-    device = f'cuda:{gpu_num}'
-    # device = f'cpu'
+    device = f'cuda:{gpu_num}' if torch.cuda.is_available() else 'cpu'
 
     scenario_train, args.nb_classes = build_dataset(is_train=True, args=args)
     scenario_val, _ = build_dataset(is_train=False, args=args)
@@ -100,9 +98,9 @@ if __name__ == '__main__':
         
         val_loader_list = []
         for num in range(task_id):
-            _, val_loader, _ = get_data(num, args, scenario_train, scenario_val) # 수정
+            _, val_loader, _ = get_data(num, args, scenario_train, scenario_val)
             val_loader_list.append(val_loader)
-        train_loader, val_loader, val_loader_entire = get_data(task_id, args, scenario_train, scenario_val) # 수정
+        train_loader, val_loader, val_loader_entire = get_data(task_id, args, scenario_train, scenario_val)
         val_loader_list.append(val_loader)
 
         optimizer = create_optimizer(args, model)

@@ -88,7 +88,6 @@ def train(model,teacher_model, train_loader, val_loader, task_tokens_old, task_i
             for old_task_id in range(len(task_tokens_old)):
                 task_token_old = task_tokens_old[old_task_id]
                 val_loader_each = val_loader_list[old_task_id]
-                # val_loader는 shuffle=False로 되어있어야 함
                 logits, targets = inference(model, val_loader, old_task_id, task_token_old, device)
                 logits_each, targets_each = inference(model, val_loader_each, old_task_id, task_token_old, device)
                 targets_each -= num_classes_per_task[old_task_id]

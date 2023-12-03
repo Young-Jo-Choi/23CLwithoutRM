@@ -99,7 +99,6 @@ class GPSA(nn.Module):
         indx = ind.repeat(img_size,img_size)
         indy = ind.repeat_interleave(img_size,dim=0).repeat_interleave(img_size,dim=1)
         indd = indx**2 + indy**2
-        # 수정
         if rel_indices.shape[1] == indd.shape[0]:
             rel_indices[:,:,:,2] = indd.unsqueeze(0)
             rel_indices[:,:,:,1] = indy.unsqueeze(0)
