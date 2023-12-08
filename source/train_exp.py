@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import copy
-from ViT_exp import forward, inference, mixup_data, mixup_criterion
+from source.ViT_exp import forward, inference, mixup_data, mixup_criterion
 from sklearn.metrics import accuracy_score
 from typing import List
 
@@ -69,7 +69,6 @@ def train(model,teacher_model, train_loader, val_loader, task_tokens_old, task_i
     for epoch in range(epochs):
         for images, targets, _ in train_loader:
             optimizer.zero_grad()
-            # (x, y, model, teacher_model, criterion, task_tokens_list:Union[List, torch.Tensor], is_distill=True, is_weight=False
             _, loss_new_task, loss_old_task = forward(x=images.to(device), y=targets.to(device)-num_classes_per_task[task_id], 
                                                       model=model, 
                                                       teacher_model=teacher_model, 

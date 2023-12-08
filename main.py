@@ -9,14 +9,14 @@ import numpy as np
 from timm.optim import create_optimizer
 from timm.scheduler import create_scheduler
 from easydict import EasyDict as edict
-from datasets import build_dataset
 import copy
 from warnings import filterwarnings
 import pickle
 import yaml
-from train_exp import train, train_0step
-from ViT_exp import ViT_clf
-from utils import get_world_size, set_random_seed, get_data
+from source.datasets import build_dataset
+from source.train_exp import train, train_0step
+from source.ViT_exp import ViT_clf
+from source.utils import get_world_size, set_random_seed, get_data
 
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser()
@@ -47,6 +47,8 @@ if __name__ == '__main__':
     args = edict(args)
 
     args.data_path = './dataset'
+    if os.path.isdir(args.data_path)==False:
+        os.mkdir(args.data_path)
     args.data_set = 'CIFAR'
     args.initial_increment = initial_classes
     args.increment = incremental_classes
@@ -71,6 +73,9 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss()
 
+    if os.path.isdir('./weights')==False:
+        os.mkdir('./weights')
+    
     for task_id in range(0,total_step):
 
         set_random_seed(seed)
