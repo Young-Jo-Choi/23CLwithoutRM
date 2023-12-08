@@ -6,11 +6,10 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 import copy
-from convit import PatchEmbed, Block, MHSA, ClassAttention
-from GPSA import GPSA
 from timm.models.layers import trunc_normal_
-from classifier import Classifier
-from typing import Union, List
+from source.classifier import Classifier
+from source.convit import PatchEmbed, Block, MHSA, ClassAttention
+from source.GPSA import GPSA
 
 class ViT_clf(nn.Module):
     def __init__(self, num_classes, img_size, patch_size, num_patches, in_chans, embed_dim, 
@@ -98,7 +97,7 @@ class ViT_clf(nn.Module):
         attention_type=attention_type
     )
 
-def forward(x, y, model, teacher_model, criterion, task_tokens_list:Union[List, torch.Tensor], is_weight=False, mixup=False, alpha=1.0):
+def forward(x, y, model, teacher_model, criterion, task_tokens_list, is_weight=False, mixup=False, alpha=1.0):
     model.set_mode('normal')
     if mixup==True:
         x_mix, y_a, y_b, lam = mixup_data(x, y, alpha=alpha, device=x.device)
